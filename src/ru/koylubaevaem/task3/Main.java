@@ -49,28 +49,33 @@ public class Main {
                 System.out.println("Data were entered incorrectly.");
                 continue;
             }
-            if (itemOfProduct < 0 || amountOfProduct < 0) {
-                System.out.println("Data were entered incorrectly. The position of product or its amount " +
-                        "can't be negative");
-                continue;
-            }
-
             if (itemOfProduct > products.length) {
                 System.out.println("There is no item with this number.");
                 continue;
             }
+            if (amountOfProduct == 0) {
+                quantity[itemOfProduct] = 0;
+                quantity[itemOfProduct] += amountOfProduct;
+                totalSum = 0;
+            }
+            if (amountOfProduct != 0) {
 //            5.Пользователь может добавлять несколько раз один и тот же товар в корзину, в этом случае он должен суммировать
-            quantity[itemOfProduct] += amountOfProduct;
-            totalSum += amountOfProduct * prices[itemOfProduct];
-
+                quantity[itemOfProduct] += amountOfProduct;
+                totalSum += amountOfProduct * prices[itemOfProduct];
+            }
         }
 //        6.Вывод всех покупок, их общую стоимость и количество, на экран после ввода всех покупок.
         for (int i = 0; i < quantity.length; i++) {
-            if (quantity[i] != 0) {
+            if (quantity[i] != 0 && quantity[i] > 0) {
                 System.out.println(products[i] + " " + quantity[i] + " items " + prices[i] + " rub/item, " + (quantity[i] * prices[i]) + " rub " + " totally");
             }
         }
-        System.out.println("Total: " + totalSum + " rub");
+        if (totalSum > 0) {
+            System.out.println("Total: " + totalSum + " rub");
+        }
+        if (totalSum < 0) {
+            System.out.println("Amount of product can't be negative");
+        }
     }
 }
 
