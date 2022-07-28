@@ -61,17 +61,13 @@ public class Main {
                 System.out.println("Data were entered incorrectly.");
                 continue;
             }
-            if (itemOfProduct < 0) {
-                System.out.println("Data were entered incorrectly. The position of product or its amount " +
-                        "can't be negative or zero");
-                continue;
-            }
-            if (itemOfProduct > products.length) {
+
+            if (itemOfProduct > products.length||itemOfProduct < 0) {
                 System.out.println("There is no item with this number.");
                 continue;
             }
             boolean isQuantityNegative = amountOfProduct < 0 && (quantity[itemOfProduct] + amountOfProduct) < 0;
-            int totalSum = 0;
+
             if (amountOfProduct == 0 || isQuantityNegative) {
                 quantity[itemOfProduct] = 0;
             } else {
@@ -81,19 +77,19 @@ public class Main {
         }
         // 6. Вывод всех покупок, их общую стоимость и количество, на экран после ввода всех покупок.
         int totalSum = 0;
-        String nameOfGood;
+
         for (int i = 0; i < quantity.length; i++) {
             if (quantity[i] > 0) {
                 // Проверяем акционный товар или нет
-                nameOfGood = products[i];
+                String nameOfGood = products[i];
                 boolean promo = isPromo(promoProducts, nameOfGood);
                 int sum;
                 if (promo) {
                     sum = ((quantity[i] / 3) * 2 + (quantity[i] % 3)) * prices[i];
-                    System.out.println("Discount price: " + products[i] + " " + quantity[i] + " items " + prices[i] + " rub/item, " + sum + " rub " + " totally, " + "without discount: " + quantity[i] * prices[i]);
+                    System.out.println("Discount price: " + products[i] + " " + quantity[i] + " items " + prices[i] + " rub/item, " + sum + " rub totally, without discount: " + quantity[i] * prices[i] + " rub");
                 } else {
                     sum = quantity[i] * prices[i];
-                    System.out.println("Price without discount : " + products[i] + " " + quantity[i] + " items " + prices[i] + " rub/item, " + sum + " rub " + " totally");
+                    System.out.println(products[i] + " " + quantity[i] + " items " + prices[i] + " rub/item, " + sum + " rub " + " totally");
                 }
                 totalSum += sum;
             }
