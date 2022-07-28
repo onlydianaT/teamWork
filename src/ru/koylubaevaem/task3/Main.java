@@ -28,20 +28,18 @@ public class Main {
         // В программе теперь появится новый массив из названий товаров, которые продаются
         // по принципу “3 по цене 2х”. Таким образом, за каждые три штуки товара из массива
         // в корзине цена должна начисляться как за два.
-        String[] promoProducts = { meat, potato, buckwheat };
+        String[] promoProducts = {meat, potato, buckwheat};
 
         // 3. Вывод списка доступных для покупки продуктов на экран;
         for (int i = 0; i < products.length; i++) {
             System.out.println((i + 1) + ": " + products[i] + " " + prices[i] + " rub.");
         }
-
         System.out.println("Promotional items, 3 for the price of 2: ");
         for (int i = 0; i < promoProducts.length; i++) {
             System.out.println((i + 1) + ": " + promoProducts[i]);
         }
-
-        int itemOfProduct;
-        int amountOfProduct;
+        int itemOfProduct = 0;
+        int amountOfProduct = 0;
         while (true) {
             // 4. Возможность ввода пользователем одной строкой номера продукта и количества для добавления в корзину;
             System.out.println("Choose the item and amount or 'end' to quit: ");
@@ -63,35 +61,36 @@ public class Main {
                 System.out.println("Data were entered incorrectly.");
                 continue;
             }
-            if (itemOfProduct < 0 || amountOfProduct < 0) {
-                System.out.println("Data were entered incorrectly. The position of product or its amount " +
-                        "can't be negative");
-                continue;
-            }
 
-            if (itemOfProduct > products.length) {
+            if (itemOfProduct > products.length||itemOfProduct < 0) {
                 System.out.println("There is no item with this number.");
                 continue;
             }
-            // 5. Пользователь может добавлять несколько раз один и тот же товар в корзину, в этом случае он должен суммировать
-            quantity[itemOfProduct] += amountOfProduct;
+            boolean isQuantityNegative = amountOfProduct < 0 && (quantity[itemOfProduct] + amountOfProduct) < 0;
 
+            if (amountOfProduct == 0 || isQuantityNegative) {
+                quantity[itemOfProduct] = 0;
+            } else {
+//            5.Пользователь может добавлять несколько раз один и тот же товар в корзину, в этом случае он должен суммировать
+                quantity[itemOfProduct] += amountOfProduct;
+            }
         }
         // 6. Вывод всех покупок, их общую стоимость и количество, на экран после ввода всех покупок.
         int totalSum = 0;
-        for (int i = 0; i < quantity.length; i++) {
-            if (quantity[i] != 0) {
 
+        for (int i = 0; i < quantity.length; i++) {
+            if (quantity[i] > 0) {
                 // Проверяем акционный товар или нет
                 String nameOfGood = products[i];
                 boolean promo = isPromo(promoProducts, nameOfGood);
                 int sum;
                 if (promo) {
                     sum = ((quantity[i] / 3) * 2 + (quantity[i] % 3)) * prices[i];
+                    System.out.println("Discount price: " + products[i] + " " + quantity[i] + " items " + prices[i] + " rub/item, " + sum + " rub totally, without discount: " + quantity[i] * prices[i] + " rub");
                 } else {
                     sum = quantity[i] * prices[i];
+                    System.out.println(products[i] + " " + quantity[i] + " items " + prices[i] + " rub/item, " + sum + " rub " + " totally");
                 }
-                System.out.println(products[i] + " " + quantity[i] + " items " + prices[i] + " rub/item, " + sum + " rub " + " totally");
                 totalSum += sum;
             }
         }
