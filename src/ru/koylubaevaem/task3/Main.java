@@ -34,12 +34,10 @@ public class Main {
         for (int i = 0; i < products.length; i++) {
             System.out.println((i + 1) + ": " + products[i] + " " + prices[i] + " rub.");
         }
-
         System.out.println("Promotional items, 3 for the price of 2: ");
         for (int i = 0; i < promoProducts.length; i++) {
             System.out.println((i + 1) + ": " + promoProducts[i]);
         }
-        int totalSum = 0;
         int itemOfProduct = 0;
         int amountOfProduct = 0;
         while (true) {
@@ -63,65 +61,53 @@ public class Main {
                 System.out.println("Data were entered incorrectly.");
                 continue;
             }
+            if (itemOfProduct < 0) {
+                System.out.println("Data were entered incorrectly. The position of product or its amount " +
+                        "can't be negative or zero");
+                continue;
+            }
             if (itemOfProduct > products.length) {
                 System.out.println("There is no item with this number.");
                 continue;
             }
-            if (amountOfProduct == 0) {
+            boolean isQuantityNegative = amountOfProduct < 0 && (quantity[itemOfProduct] + amountOfProduct) < 0;
+            int totalSum = 0;
+            if (amountOfProduct == 0 || isQuantityNegative) {
                 quantity[itemOfProduct] = 0;
-                quantity[itemOfProduct] += amountOfProduct;
-                totalSum = 0;
-            }
-            if (amountOfProduct != 0) {
+            } else {
 //            5.Пользователь может добавлять несколько раз один и тот же товар в корзину, в этом случае он должен суммировать
                 quantity[itemOfProduct] += amountOfProduct;
-                totalSum += amountOfProduct * prices[itemOfProduct];
             }
-
-            // 5. Пользователь может добавлять несколько раз один и тот же товар в корзину, в этом случае он должен суммировать
-//            quantity[itemOfProduct] += amountOfProduct;
-
-
         }
         // 6. Вывод всех покупок, их общую стоимость и количество, на экран после ввода всех покупок.
-        totalSum = 0;
+        int totalSum = 0;
         String nameOfGood;
         for (int i = 0; i < quantity.length; i++) {
-
-            if (quantity[i] != 0 && quantity[i] > 0) {
-                System.out.println("Price without discount: "+ products[i] + " " + quantity[i] + " items " + prices[i] + " rub/item, " + (quantity[i] * prices[i]) + " rub " + " totally");}
-
-                if (quantity[i] != 0&&quantity[i] > 0) {
-
-                    // Проверяем акционный товар или нет
-                    nameOfGood = products[i];
-                    boolean promo = isPromo(promoProducts, nameOfGood);
-                    int sum;
-                    if (promo) {
-                        sum = ((quantity[i] / 3) * 2 + (quantity[i] % 3)) * prices[i];
-                    } else {
-                        sum = quantity[i] * prices[i];
-                    }
-                    System.out.println("Discount price: " + products[i] + " " + quantity[i] + " items " + prices[i] + " rub/item, " + sum + " rub " + " totally");
-                    totalSum += sum;
-
+            if (quantity[i] > 0) {
+                // Проверяем акционный товар или нет
+                nameOfGood = products[i];
+                boolean promo = isPromo(promoProducts, nameOfGood);
+                int sum;
+                if (promo) {
+                    sum = ((quantity[i] / 3) * 2 + (quantity[i] % 3)) * prices[i];
+                    System.out.println("Discount price: " + products[i] + " " + quantity[i] + " items " + prices[i] + " rub/item, " + sum + " rub " + " totally, " + "without discount: " + quantity[i] * prices[i]);
+                } else {
+                    sum = quantity[i] * prices[i];
+                    System.out.println("Price without discount : " + products[i] + " " + quantity[i] + " items " + prices[i] + " rub/item, " + sum + " rub " + " totally");
                 }
-            }
-            if (totalSum > 0) {
-                System.out.println("Total: " + totalSum + " rub");
-            }
-            if (amountOfProduct < 0) {
-                System.out.println("Amount of product can't be negative");
+                totalSum += sum;
             }
         }
-
-        private static boolean isPromo (String[]promoProducts, String nameOfGood){
-            for (String item : promoProducts) {
-                if (nameOfGood.equals(item)) {
-                    return true;
-                }
-            }
-            return false;
-        }
+        System.out.println("Total: " + totalSum + " rub");
     }
+
+    private static boolean isPromo(String[] promoProducts, String nameOfGood) {
+        for (String item : promoProducts) {
+            if (nameOfGood.equals(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
 
